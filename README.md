@@ -1,354 +1,136 @@
+# File Integrity Monitor
 
+A Python-based cybersecurity tool that monitors files for unauthorised changes using SHA-256 cryptographic hashing and baseline verification.
 
-\# File Integrity Monitor
+## Project Overview
 
+The File Integrity Monitor (FIM) establishes a cryptographic baseline of files within a selected directory. Subsequent scans compare current file hashes against the stored baseline to identify modifications, newly created files and deleted files.
 
+The project demonstrates core cybersecurity principles associated with file integrity monitoring, data integrity, cryptographic hashing, security logging and automated testing.
 
-A Python-based file integrity monitoring tool that uses SHA-256 cryptographic hashing to detect unauthorised or unexpected changes to files.
+## Key Features
 
+- **SHA-256 hashing:** Generates cryptographic hashes to identify file changes.
+- **Baseline creation:** Records file hashes in a JSON baseline.
+- **Baseline protection:** Uses a separate SHA-256 checksum to verify baseline integrity.
+- **Change detection:** Identifies modified, added and deleted files.
+- **Nested directory monitoring:** Supports files in subdirectories.
+- **Automated reporting:** Generates scan reports in text format.
+- **Security logging:** Records monitoring activity.
+- **Automated testing:** Includes unit tests for core integrity-monitoring functions.
 
+## Technology Stack
 
-\## Project Overview
+- Python 3
+- SHA-256 / hashlib
+- JSON
+- pathlib
+- unittest
+- Git and GitHub
 
-
-
-The File Integrity Monitor establishes a trusted baseline of files within a selected directory. Subsequent scans compare current file hashes against the stored baseline to identify changes.
-
-
-
-The tool is designed as a practical cybersecurity project demonstrating file integrity monitoring, cryptographic hashing, baseline verification, logging and automated testing.
-
-
-
-\## Key Features
-
-
-
-\- SHA-256 file hashing.
-
-\- Baseline creation and storage in JSON format.
-
-\- Detection of modified files.
-
-\- Detection of newly added files.
-
-\- Detection of deleted files.
-
-\- Identification of unchanged files.
-
-\- Recursive scanning of nested directories.
-
-\- Detection of baseline tampering using a separate SHA-256 checksum.
-
-\- Automated scan report generation.
-
-\- Activity logging and error handling.
-
-\- Automated unit testing.
-
-
-
-\## Technology
-
-
-
-\- Python 3
-
-\- SHA-256
-
-\- JSON
-
-\- Python standard library
-
-\- unittest testing framework
-
-
-
-No third-party Python packages are required.
-
-
-
-\## Project Structure
-
-
+## Project Structure
 
 ```text
-
 File-Integrity-Monitor/
-
-├── baselines/
-
-│   ├── baseline.json
-
-│   └── baseline.sha256
-
-├── logs/
-
-│   └── fim.log
-
-├── reports/
-
-│   └── scan-report.txt
-
 ├── src/
-
-│   ├── baseline.py
-
-│   ├── baseline\_security.py
-
-│   ├── hash\_engine.py
-
 │   ├── main.py
-
+│   ├── hash_engine.py
+│   ├── baseline.py
+│   ├── baseline_security.py
 │   ├── monitor.py
-
 │   └── reporter.py
-
-├── test-files/
-
-│   ├── empty.txt
-
-│   ├── sample.txt
-
-│   ├── unexpected.txt
-
-│   └── subfolder/
-
-│       └── nested.txt
-
 ├── tests/
-
-│   └── test\_integrity.py
-
+│   └── test_integrity.py
+├── test-files/
+├── baselines/
+├── reports/
+├── logs/
 ├── .gitignore
-
 └── README.md
-
 ```
 
-
-
-\## Installation
-
-
+## Installation
 
 Clone the repository:
 
-
-
 ```bash
-
-git clone YOUR\_GITHUB\_REPOSITORY\_URL
-
-```
-
-
-
-Navigate into the project directory:
-
-
-
-```bash
-
+git clone https://github.com/t-phiri-cyber/File-Integrity-Monitor.git
 cd File-Integrity-Monitor
-
 ```
 
+Python 3 is required. The project uses Python standard-library modules and does not require additional third-party packages for its core functionality.
 
+## Usage
 
-Python 3 is required.
-
-
-
-\## Usage
-
-
-
-\### 1. Create a baseline
-
-
+**1. Create the initial baseline:**
 
 ```bash
-
 python -m src.main baseline
-
 ```
 
-
-
-This records the SHA-256 hashes of files in the monitoring directory.
-
-
-
-\### 2. Scan for changes
-
-
+**2. Run an integrity scan:**
 
 ```bash
-
 python -m src.main scan
-
 ```
 
+The scan compares the monitored files against the stored baseline and produces a report.
 
+## Testing
 
-The scan compares current file hashes against the saved baseline.
-
-
-
-\### 3. Select a directory
-
-
+Run the automated unit tests:
 
 ```bash
-
-python -m src.main baseline --directory test-files
-
-```
-
-
-
-To scan the same directory:
-
-
-
-```bash
-
-python -m src.main scan --directory test-files
-
-```
-
-
-
-\### 4. Run automated tests
-
-
-
-```bash
-
 python -m unittest discover -s tests -v
-
 ```
 
+The test suite covers:
 
+- Modified file detection.
+- Newly added file detection.
+- Deleted file detection.
+- Nested file handling.
+- Unchanged file verification.
 
-\## Test Results
+**Test result:** 5 tests passed successfully.
 
+## Practical Validation
 
+The project was also tested through manual command-line exercises.
 
-The project has been manually tested and includes five automated unit tests.
-
-
-
-| Test | Result |
-
+| Test scenario | Observed result |
 |---|---|
+| Modified file | Detected |
+| Newly added file | Detected |
+| Deleted file | Detected |
+| Unchanged files | Correctly identified |
+| Tampered baseline | Verification failed |
+| Recreated baseline | Successful |
+| Clean integrity scan | 0 modified, 0 added, 0 deleted |
 
-| Unchanged file detection | Passed |
+The baseline tampering exercise confirmed that changing the stored baseline without updating its checksum caused verification to fail.
 
-| Modified file detection | Passed |
+## Security Considerations and Limitations
 
-| Added file detection | Passed |
+- SHA-256 provides file-integrity verification, not file confidentiality.
+- The baseline and checksum are stored locally; an attacker with sufficient access could potentially compromise both.
+- The tool is intended as a practical file-integrity monitoring project, not a replacement for enterprise endpoint detection and response (EDR), SIEM or host-based intrusion detection systems.
+- Monitoring is initiated through command-line scans rather than continuous real-time monitoring.
 
-| Deleted file detection | Passed |
+## Future Improvements
 
-| Nested file detection | Passed |
+- Scheduled or continuous monitoring.
+- Secure off-device baseline storage.
+- Alert notifications for detected changes.
+- File exclusion and configuration options.
+- Integration with centralised security monitoring platforms.
 
+## Author
 
+**Thembelani Phiri**
 
-\*\*Automated test result: 5/5 passed.\*\*
+Cybersecurity portfolio project demonstrating Python development, cryptographic hashing, file-integrity verification and security testing.
 
+## Disclaimer
 
-
-Additional manual tests covered empty files, missing directories, baseline tampering, checksum verification, report generation and activity logging.
-
-
-
-\## Security Considerations
-
-
-
-The tool uses SHA-256 to identify changes in file contents.
-
-
-
-A separate checksum is used to verify the integrity of the baseline JSON file.
-
-
-
-The checksum is stored locally alongside the baseline. This provides detection of accidental or unauthorised changes but does not protect against an attacker who can modify both files.
-
-
-
-For stronger production security, the checksum should be stored separately with restricted access or protected using a keyed authentication mechanism.
-
-
-
-\## Current Limitations
-
-
-
-\- Local directory monitoring rather than continuous real-time monitoring.
-
-\- No graphical user interface.
-
-\- No centralised monitoring dashboard.
-
-\- No external alerting integration.
-
-\- Baseline and checksum are stored locally.
-
-
-
-\## Future Improvements
-
-
-
-\- Real-time monitoring using filesystem event detection.
-
-\- Secure baseline storage.
-
-\- Email or dashboard alerts.
-
-\- Configurable monitoring directories.
-
-\- Improved automated test coverage.
-
-\- Centralised logging and monitoring.
-
-
-
-\## Learning Outcomes
-
-
-
-This project demonstrates practical understanding of:
-
-
-
-\- Cryptographic hashing.
-
-\- File integrity monitoring.
-
-\- Baseline verification.
-
-\- Security logging.
-
-\- Error handling.
-
-\- Python development.
-
-\- Automated testing.
-
-\- Basic cybersecurity control implementation.
-
-
-
-\## Disclaimer
-
-
-
-This is an educational cybersecurity project developed and tested in a local environment. It is not a replacement for enterprise file integrity monitoring or endpoint detection and response solutions.
-
-
-
+This project was developed for educational and portfolio purposes. Testing was conducted on local test files and did not involve unauthorised access to systems or data.
